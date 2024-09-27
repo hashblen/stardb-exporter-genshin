@@ -2,13 +2,13 @@ use anyhow::Result;
 use base64::{prelude::BASE64_STANDARD, Engine};
 use clap::Parser;
 use pcap::{ConnectionStatus, Device};
-use reliquary::network::{
-    gen::{command_id, proto::GetQuestDataScRsp::GetQuestDataScRsp},
+use artifactarium::network::{
+    gen::{command_id, proto::KLMEMLIIKBN::KLMEMLIIKBN},
     GamePacket, GameSniffer,
 };
 use std::{collections::HashMap, io::Write, panic::catch_unwind, path::PathBuf, sync::mpsc};
 
-const PACKET_FILTER: &str = "udp portrange 23301-23302";
+const PACKET_FILTER: &str = "udp portrange 22101-22102";
 
 #[derive(serde::Deserialize)]
 struct Id {
@@ -58,7 +58,7 @@ fn main() -> Result<()> {
 }
 
 fn export(args: &Args) -> Result<()> {
-    let achievements: Vec<Id> = ureq::get("https://stardb.gg/api/achievements")
+    let achievements: Vec<Id> = ureq::get("https://stardb.gg/api/gi/achievements")
         .call()?
         .into_json()?;
     let achievement_ids: Vec<_> = achievements.into_iter().map(|a| a.id).collect();
@@ -98,19 +98,18 @@ fn export(args: &Args) -> Result<()> {
         };
 
         for command in commands {
-            if command.command_id == command_id::GetQuestDataScRsp {
+            if command.command_id == command_id::KLMEMLIIKBN {
                 if !achievements.is_empty() {
                     continue;
                 }
 
                 println!("Got achievements packet");
 
-                if let Ok(quest_data) = command.parse_proto::<GetQuestDataScRsp>() {
-                    for quest in quest_data.quest_list {
-                        if achievement_ids.contains(&quest.id)
-                            && (quest.status.value() == 2 || quest.status.value() == 3)
+                if let Ok(quest_data) = command.parse_proto::<KLMEMLIIKBN>() {
+                    for quest in quest_data.AAHMMHIJBIA {
+                        if (quest.LMGNNCGPPCG.value() == 2 || quest.LMGNNCGPPCG.value() == 3)
                         {
-                            achievements.push(quest.id);
+                            achievements.push(quest.OBOOPJLPDNI);
                         }
                     }
                 }
@@ -142,8 +141,8 @@ fn export(args: &Args) -> Result<()> {
     Ok(())
 }
 
-fn load_keys() -> Result<HashMap<u32, Vec<u8>>> {
-    let keys: HashMap<u32, String> = serde_json::from_slice(include_bytes!("../keys.json"))?;
+fn load_keys() -> Result<HashMap<u16, Vec<u8>>> {
+    let keys: HashMap<u16, String> = serde_json::from_slice(include_bytes!("../keys.json"))?;
 
     let mut keys_bytes = HashMap::new();
 

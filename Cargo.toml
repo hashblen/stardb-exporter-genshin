@@ -1,5 +1,5 @@
 [package]
-name = "stardb-exporter"
+name = "stardb-exporter-genshin"
 version = "1.1.0"
 edition = "2021"
 
@@ -9,7 +9,7 @@ arboard = "3.4.0"
 base64 = "0.22.1"
 clap = { version = "4.5.17", features = ["derive"] }
 pcap = "2.2.0"
-reliquary = { git = "https://github.com/juliuskreutz/reliquary" }
+artifactarium = { path = "Z:/smallProjects/artifactarium" }
 self_update = { version = "0.41.0", features = [
     "archive-zip",
     "compression-zip-deflate",
